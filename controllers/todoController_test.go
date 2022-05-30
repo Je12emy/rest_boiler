@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,10 +17,12 @@ var (
 	todoController TodoController
 	recorder       *httptest.ResponseRecorder
 	todos          []models.Todo
+	router         http.Handler
 )
 
 func setup() {
 	todoController = *NewTodoController(services.NewTodoService())
+	router = initRouter(todoController)
 	recorder = httptest.NewRecorder()
 	todos = []models.Todo{
 		{
@@ -40,14 +43,22 @@ func setup() {
 	}
 }
 
+func initRouter(t TodoController) http.Handler {
+	r := mux.NewRouter()
+	r.HandleFunc("/todo/{id}", t.GetById).Methods(http.MethodGet)
+	r.HandleFunc("/todo", t.GetAll).Methods(http.MethodGet)
+	return r
+}
+
 func TestGetAll(t *testing.T) {
 	// Arrange
 	setup()
-	request := httptest.NewRequest(http.MethodGet, "/todo", nil)
 	var response []models.Todo
+	request := httptest.NewRequest(http.MethodGet, "/todo", nil)
+	sut := router
 
 	// Act
-	todoController.GetAll(recorder, request)
+	sut.ServeHTTP(recorder, request)
 	result := recorder.Result()
 	defer result.Body.Close()
 
@@ -63,14 +74,15 @@ func TestGetAll(t *testing.T) {
 	assert.Equal(t, response, todos, "Response did not match the expected result")
 }
 
-func TestGetById(t *testing.T)  {
+func TestGetById(t *testing.T) {
 	// Arrange
 	setup()
-	request := httptest.NewRequest(http.MethodGet, "/todo/1", nil)
 	var response models.Todo
+	request := httptest.NewRequest(http.MethodGet, "/todo/1", nil)
+	sut := router
 
 	// Act
-	todoController.GetById(recorder, request)
+	sut.ServeHTTP(recorder, request)
 	result := recorder.Result()
 	defer result.Body.Close()
 
