@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"je12emy/todo_app/dto"
+	"je12emy/todo_app/helpers"
 	"je12emy/todo_app/models"
 )
 
@@ -38,7 +39,7 @@ func (t TodoService) GetAll() []models.Todo {
 
 func (t TodoService) GetById(id int) (models.Todo, error) {
 	if id > len(todos) {
-		return models.Todo{}, errors.New(fmt.Sprintf("Todo with id of %d not found", id))
+		return models.Todo{}, &helpers.ApiError{Code: 404, Message: helpers.NotFoundError(models.TodoModelName, id)}
 	}
 	todo := todos[id]
 	return todo, nil

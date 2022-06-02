@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"io/ioutil"
+	"je12emy/todo_app/helpers"
 	"je12emy/todo_app/models"
 	"je12emy/todo_app/services"
 	"net/http"
@@ -96,4 +97,33 @@ func TestGetById(t *testing.T) {
 
 	assert.Equal(t, result.StatusCode, http.StatusOK, "Response should have been 200 Ok")
 	assert.Equal(t, response, todos[1], "Response did not match the expected result")
+}
+
+func TestGetByIdNotFound(t *testing.T) {
+	// Arrange
+	setup()
+	type ApiError struct {
+		Error string `json:"Error"`
+	}
+
+	var response ApiError
+
+	request := httptest.NewRequest(http.MethodGet, "/todo/99", nil)
+	sut := router
+
+	// Act
+	sut.ServeHTTP(recorder, request)
+	result := recorder.Result()
+	defer result.Body.Close()
+
+	data, err := ioutil.ReadAll(result.Body)
+	err = json.Unmarshal(data, &response)
+
+	// Assert
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	assert.Equal(t, result.StatusCode, http.StatusNotFound, "Response should have been 404 Not Found")
+	assert.Equal(t, response.Error, helpers.NotFoundError(models.TodoModelName, 99))
 }
