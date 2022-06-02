@@ -50,7 +50,7 @@ func (t TodoController) GetById(w http.ResponseWriter, r *http.Request) {
 	todo, err := t.todoService.GetById(id)
 
 	if err != nil {
-		helpers.SendError(err, w)
+		helpers.SendApiError(err, w)
 		return
 	}
 

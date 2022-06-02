@@ -5,23 +5,27 @@ import (
 	"net/http"
 )
 
-type httpResponse struct {
+// Error response object
+type errorResponse struct {
 	Error interface{}
 }
 
+// Send any kind of error to the ResponseWriter
 func ThrowError(code int, error interface{}, w http.ResponseWriter) {
-	message := httpResponse{
+	message := errorResponse{
 		Error: error,
 	}
 	SendResponse(code, message, w)
 }
 
+// Send a response to the ResponseWriter
 func SendResponse(code int, data interface{}, w http.ResponseWriter) {
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(data)
 }
 
-func SendError(error error, w http.ResponseWriter) {
+// Check for an API Error and throw it
+func SendApiError(error error, w http.ResponseWriter) {
 	// If we can assert the error into an ApiError send it
 	if err, ok := error.(*ApiError); ok {
 		ThrowError(err.Code, err.Message, w)
