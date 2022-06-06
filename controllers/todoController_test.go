@@ -54,7 +54,7 @@ func initRouter(t TodoController) http.Handler {
 	return r
 }
 
-func Test_Returns_All_Todos(t *testing.T) {
+func Test_TodoController_Returns_All_Todos(t *testing.T) {
 	// Arrange
 	setup()
 	var response []models.Todo
@@ -78,7 +78,7 @@ func Test_Returns_All_Todos(t *testing.T) {
 	assert.Equal(t, response, todos, "Response did not match the expected result")
 }
 
-func Test_Returns_A_Todo_By_Its_ID(t *testing.T) {
+func Test_TodoController_Returns_A_Todo_By_Its_ID(t *testing.T) {
 	// Arrange
 	setup()
 	var response models.Todo
@@ -102,7 +102,7 @@ func Test_Returns_A_Todo_By_Its_ID(t *testing.T) {
 	assert.Equal(t, response, todos[1], "Response did not match the expected result")
 }
 
-func Test_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T) {
+func Test_TodoController_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T) {
 	// Arrange
 	setup()
 	type ApiError struct {
@@ -131,7 +131,7 @@ func Test_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T) {
 	assert.Equal(t, response.Error, helpers.NotFoundError(models.TodoModelName, 99))
 }
 
-func Test_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
+func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 	// Arrange
 	setup()
 	var response models.Todo
