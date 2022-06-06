@@ -67,13 +67,16 @@ func Test_TodoController_Returns_All_Todos(t *testing.T) {
 	defer result.Body.Close()
 
 	data, err := ioutil.ReadAll(result.Body)
-	err = json.Unmarshal(data, &response)
-
-	// Assert
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
 
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	// Assert
 	assert.Equal(t, result.StatusCode, http.StatusOK, "Response should have been 200 Ok")
 	assert.Equal(t, response, todos, "Response did not match the expected result")
 }
@@ -91,13 +94,16 @@ func Test_TodoController_Returns_A_Todo_By_Its_ID(t *testing.T) {
 	defer result.Body.Close()
 
 	data, err := ioutil.ReadAll(result.Body)
-	err = json.Unmarshal(data, &response)
-
-	// Assert
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
 
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	// Assert
 	assert.Equal(t, result.StatusCode, http.StatusOK, "Response should have been 200 Ok")
 	assert.Equal(t, response, todos[1], "Response did not match the expected result")
 }
@@ -116,13 +122,16 @@ func Test_TodoController_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T)
 	defer result.Body.Close()
 
 	data, err := ioutil.ReadAll(result.Body)
-	err = json.Unmarshal(data, &response)
-
-	// Assert
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
 
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	// Assert
 	assert.Equal(t, result.StatusCode, http.StatusNotFound, "Response should have been 404 Not Found")
 	assert.Equal(t, response.Error, helpers.NotFoundError(models.TodoModelName, 99))
 }
@@ -137,7 +146,6 @@ func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 
 	var requestBody bytes.Buffer
 	err := json.NewEncoder(&requestBody).Encode(createTodoDto)
-
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
@@ -151,13 +159,16 @@ func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 	defer result.Body.Close()
 
 	data, err := ioutil.ReadAll(result.Body)
-	err = json.Unmarshal(data, &response)
-
-	// Assert
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
 
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	// Assert
 	assert.Equal(t, result.StatusCode, http.StatusOK, "Response should have been 200 Ok")
 	assert.Equal(t, response.Todo, createTodoDto.Todo, "Response Todo did not match with the request")
 	assert.Equal(t, response.Completed, false, "Response Todo did not match with the request")
@@ -176,13 +187,16 @@ func Test_TodoController_Returns_BadRequest_When_The_Body_Is_Empty(t *testing.T)
 	defer result.Body.Close()
 
 	data, err := ioutil.ReadAll(result.Body)
-	err = json.Unmarshal(data, &response)
-
-	// Assert
 	if err != nil {
 		t.Errorf("Expected error to be nil but got %v", err)
 	}
 
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	// Assert
 	assert.Equal(t, result.StatusCode, http.StatusBadRequest, "Response should have been 400 BadRequest")
 	assert.Equal(t, "The Todo field is required", response.Error["Todo"][0], "Response should have been 400 BadRequest")
 }
