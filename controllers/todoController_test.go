@@ -105,11 +105,7 @@ func Test_TodoController_Returns_A_Todo_By_Its_ID(t *testing.T) {
 func Test_TodoController_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T) {
 	// Arrange
 	setup()
-	type ApiError struct {
-		Error string `json:"Error"`
-	}
-
-	var response ApiError
+	var response helpers.HttpError
 
 	request := httptest.NewRequest(http.MethodGet, "/todo/99", nil)
 	sut := router
@@ -165,4 +161,13 @@ func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 	assert.Equal(t, result.StatusCode, http.StatusOK, "Response should have been 200 Ok")
 	assert.Equal(t, response.Todo, createTodoDto.Todo, "Response Todo did not match with the request")
 	assert.Equal(t, response.Completed, false, "Response Todo did not match with the request")
+}
+
+func Test_TodoController_Returns_BadRequest_When_The_Body_Is_Empty(t *testing.T) {
+	// Arrange
+	setup()
+
+	// Act
+
+	// Assert
 }

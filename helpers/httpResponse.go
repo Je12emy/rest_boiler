@@ -5,6 +5,11 @@ import (
 	"net/http"
 )
 
+// Error response object for HTTP requests, meant to be used on tests
+type HttpError struct {
+	Error string
+}
+
 // Error response object
 type errorResponse struct {
 	Error interface{}
