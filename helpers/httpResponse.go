@@ -5,17 +5,27 @@ import (
 	"net/http"
 )
 
-// Error response object for HTTP requests, meant to be used on tests
+/*
+Error response object for simple error message response, for example:
+"message": "ID was not found"
+*/
 type HttpErrorMessage struct {
 	Error string
 }
 
-// Error response object for validation errors
-type HttpErrorObject struct {
+/*
+Error response object for validation errors, for example:
+"Error": {
+	"Todo": [
+		"The Todo field is required"
+	]
+}
+*/
+type HttpValidationError struct {
 	Error map[string][]string
 }
 
-// Error response object
+// Error response object for returning errors in controllers
 type errorResponse struct {
 	Error interface{}
 }

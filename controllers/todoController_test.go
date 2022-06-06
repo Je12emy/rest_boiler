@@ -166,14 +166,7 @@ func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 func Test_TodoController_Returns_BadRequest_When_The_Body_Is_Empty(t *testing.T) {
 	// Arrange
 	setup()
-	var response helpers.HttpErrorObject
-	var createTodoDto string = "{}"
-	var requestBody bytes.Buffer
-
-	err := json.NewEncoder(&requestBody).Encode(createTodoDto)
-	if err != nil {
-		t.Errorf("Expected error to be nil but got %v", err)
-	}
+	var response helpers.HttpValidationError
 
 	request := httptest.NewRequest(http.MethodPost, "/todo", nil)
 	sut := router
@@ -192,4 +185,12 @@ func Test_TodoController_Returns_BadRequest_When_The_Body_Is_Empty(t *testing.T)
 
 	assert.Equal(t, result.StatusCode, http.StatusBadRequest, "Response should have been 400 BadRequest")
 	assert.Equal(t, "The Todo field is required", response.Error["Todo"][0], "Response should have been 400 BadRequest")
+}
+
+func Test_TodoController_Returns_BadRequest_When_A_Todo_Is_Empty(t *testing.T)  {
+	// Arrange
+
+	// Act
+
+	// Assert
 }
