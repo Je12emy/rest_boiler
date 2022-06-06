@@ -105,7 +105,7 @@ func Test_TodoController_Returns_A_Todo_By_Its_ID(t *testing.T) {
 func Test_TodoController_Returns_NotFound_When_The_ID_Is_Not_Found(t *testing.T) {
 	// Arrange
 	setup()
-	var response helpers.HttpError
+	var response helpers.HttpErrorMessage
 
 	request := httptest.NewRequest(http.MethodGet, "/todo/99", nil)
 	sut := router
@@ -166,8 +166,30 @@ func Test_TodoController_Returns_200Ok_When_Creating_A_Todo(t *testing.T) {
 func Test_TodoController_Returns_BadRequest_When_The_Body_Is_Empty(t *testing.T) {
 	// Arrange
 	setup()
+	var response helpers.HttpErrorObject
+	var createTodoDto string = "{}"
+	var requestBody bytes.Buffer
 
+	err := json.NewEncoder(&requestBody).Encode(createTodoDto)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	request := httptest.NewRequest(http.MethodPost, "/todo", nil)
+	sut := router
 	// Act
+	sut.ServeHTTP(recorder, request)
+	result := recorder.Result()
+	defer result.Body.Close()
+
+	data, err := ioutil.ReadAll(result.Body)
+	err = json.Unmarshal(data, &response)
 
 	// Assert
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	assert.Equal(t, result.StatusCode, http.StatusBadRequest, "Response should have been 400 BadRequest")
+	assert.Equal(t, "The Todo field is required", response.Error["Todo"][0], "Response should have been 400 BadRequest")
 }

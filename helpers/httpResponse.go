@@ -6,8 +6,13 @@ import (
 )
 
 // Error response object for HTTP requests, meant to be used on tests
-type HttpError struct {
+type HttpErrorMessage struct {
 	Error string
+}
+
+// Error response object for validation errors
+type HttpErrorObject struct {
+	Error map[string][]string
 }
 
 // Error response object
